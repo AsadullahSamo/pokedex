@@ -12,7 +12,7 @@ export default function DetailsCard({pokemon}: any) {
 	const [isOpenModal, setIsOpenModal] = useState(true);
 	const [isOpen, setIsOpen] = useState(isOpenModal);
 	const [aboutPokemon, setAboutPokemon] = useState({species: '', height: 0, weight: 0, abilities: ''});
-	const statsNames = ['Hp', 'Attack', 'Defense', 'Special Attack', 'Special Defense', 'Speed', 'Total avg'];
+	const statsNames = [['Hp', 80], ['Attack', 54], ['Defense', 42], ['Special Attack', -4], ['Special Defense', -16], ['Speed', 57], ['Total avg', 34]];
 	const [stats, setStats] = useState<number[]>([]);
 		
 		function openModal() {
@@ -72,7 +72,7 @@ export default function DetailsCard({pokemon}: any) {
 			})
 			setAboutPokemon({species: data.species?.name, height: data.height*10, weight: data.weight/10, abilities: abilities})
 			const baseStats = data.stats?.map((stat: any) => stat.base_stat) || [];
-  		const totalAvg = (baseStats.reduce((a: number, b: number) => a + b, 0) / stats.length).toFixed(1)
+  		const totalAvg = (baseStats.reduce((a: number, b: number) => a + b, 0) / baseStats.length).toFixed(1)
 			setStats([...baseStats, totalAvg]);
 			console.log(stats);
 		})
@@ -105,19 +105,6 @@ export default function DetailsCard({pokemon}: any) {
 		return evoChain;
 	}
 	
-	const showAbout = () => {
-		setActive('about');
-	}
-
-	const showBaseStats = () => {
-		setActive('base-stats');
-	}
-
-	const showEvolution = () => {
-		setActive('evolution');
-	}
-
-
 		const customStyles = {
 			content: {
 				top: '50%',
@@ -153,9 +140,9 @@ export default function DetailsCard({pokemon}: any) {
 
 		<div className="w-[600px] h-96 rounded-xl -mt-5" style={{backgroundColor: 'white'}}>
 			<nav className='flex gap-10 px-10 pt-3'>
-				<button className={`text-[18px] font-semibold hover:text-black hover:underline hover:decoration-[#2e56ae] hover:decoration-[5px] hover:underline-offset-8 ${active === 'about' ? 'text-black decoration-[#2e56ae] underline decoration-[5px] underline-offset-8' : 'text-[#a2a2a2] no-underline'}`} onClick={showAbout}> About </button>
-				<button className={`text-[18px] font-semibold hover:text-black hover:underline hover:decoration-[#2e56ae] hover:decoration-[5px] hover:underline-offset-8 ${active === 'base-stats' ? 'text-black decoration-[#2e56ae] underline decoration-[5px] underline-offset-8' : 'text-[#a2a2a2] no-underline'}`} onClick={showBaseStats}> Base Stats </button>
-				<button className={`text-[18px] font-semibold hover:text-black hover:underline hover:decoration-[#2e56ae] hover:decoration-[5px] hover:underline-offset-8 ${active === 'evolution' ? 'text-black decoration-[#2e56ae] underline decoration-[5px] underline-offset-8' : 'text-[#a2a2a2] no-underline'}`} onClick={showEvolution}> Evolution </button>
+				<button className={`text-[18px] font-semibold hover:text-black hover:underline hover:decoration-[#2e56ae] hover:decoration-[5px] hover:underline-offset-8 ${active === 'about' ? 'text-black decoration-[#2e56ae] underline decoration-[5px] underline-offset-8' : 'text-[#a2a2a2] no-underline'}`} onClick={() => setActive('about')}> About </button>
+				<button className={`text-[18px] font-semibold hover:text-black hover:underline hover:decoration-[#2e56ae] hover:decoration-[5px] hover:underline-offset-8 ${active === 'base-stats' ? 'text-black decoration-[#2e56ae] underline decoration-[5px] underline-offset-8' : 'text-[#a2a2a2] no-underline'}`} onClick={() => setActive('base-stats')}> Base Stats </button>
+				<button className={`text-[18px] font-semibold hover:text-black hover:underline hover:decoration-[#2e56ae] hover:decoration-[5px] hover:underline-offset-8 ${active === 'evolution' ? 'text-black decoration-[#2e56ae] underline decoration-[5px] underline-offset-8' : 'text-[#a2a2a2] no-underline'}`} onClick={() => setActive('evolution')}> Evolution </button>
 			</nav>
 
 			<div className={`w-[100%] mt-1 py-[1px] bg-[#eaecee]`}></div>
@@ -175,7 +162,6 @@ export default function DetailsCard({pokemon}: any) {
 					<p className={`text-[18px] ${fonts.RobotoBold}`}> {aboutPokemon.height} cm </p>
 					<p className={`text-[18px] ${fonts.RobotoRegular}`}> {aboutPokemon.weight} kg </p>
 					<p className={`text-[18px] ${fonts.RobotoBold}`}> {aboutPokemon.abilities} </p>
-					
 				</div>
 			</div>
 			)}
@@ -232,7 +218,7 @@ export default function DetailsCard({pokemon}: any) {
 
 			{ active === 'base-stats' &&
 				<div className='flex flex-col gap-10 justify-start mt-12'>
-					<div className='flex gap-10 justify-start'>
+					{/* <div className='flex gap-10 justify-start'>
 						<p className='font-bold text-[#a2a2a2] -mt-5 ml-6'> Hp </p>
 						<p className={`${fonts.RobotoMedium} text-black -mt-5 self-center ml-20`}> {stats[0]} </p>
 						<ProgressBar width={stats[0]} color={pokemon.colors[pokemon.type[0]]?.split(' ')} />
@@ -272,9 +258,15 @@ export default function DetailsCard({pokemon}: any) {
 						<p className='font-bold text-[#a2a2a2] -mt-5 ml-6'> Total avg </p>
 						<p className={`${fonts.RobotoMedium} text-black -mt-5 self-center ml-[34px]`}> {(stats.reduce((a, b) => a + b, 0) / stats.length).toFixed(1)} </p>
 						<ProgressBar width={stats.reduce((a, b) => a + b, 0) / stats.length} color={pokemon.colors[pokemon.type[0]]?.split(' ')} />
-					</div>
+					</div> */}
 
-					
+						{statsNames.map((stat, i) => (
+							<div key={i} className='flex gap-10 justify-start'>
+								<p className='font-bold text-[#a2a2a2] -mt-5 ml-6'> {stat[0]} </p>
+								<p className={`${fonts.RobotoMedium} text-black -mt-5 self-center`} style={{marginLeft: `${stat[1]}px`}}> {stats[i]} </p>
+								<ProgressBar width={stats[i]} color={pokemon.colors[pokemon.type[0]]?.split(' ')} />
+							</div>
+						))}
 				</div>
 			}
 
