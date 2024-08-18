@@ -39,7 +39,7 @@ export const Pagination: React.FC<PaginationProps> = ({ sendDataToParent, active
 
       <div className="flex items-center gap-2">
         {startingNumberArray.map((number: number) => (
-          <button key={number} className={`${active === number ? 'bg-[#414142] text-white' : 'bg-white text-[#414142]'} duration-300 hover:bg-gray-400 size-10 rounded-full font-bold text-xl`} onClick={() => buttonClick(number)}> {number} </button>
+          <button key={number} className={`${active === number ? 'bg-[#414142] text-white' : 'bg-white text-[#414142]'} duration-300 hover:bg-gray-400 hover:text-white size-10 rounded-full font-bold text-xl`} onClick={() => buttonClick(number)}> {number} </button>
         ))}
       </div>
 
