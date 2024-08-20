@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Pagination } from './Pagination'
 import Filters from './Filters';
-import loader from '../../styles/Loader.module.css'
 import search from '../../public/assets/icons/search.svg'
 import NoResults from '../../public/assets/images/no results.gif'
+import loader from '../../styles/Loader.module.css'
 import fonts from '../../styles/fonts.module.css';
 import PokedexLogo from '../../public/assets/icons/Pokedex-logo.svg';
 import filter from '../../public/assets/icons/filter.svg';
@@ -30,7 +30,6 @@ import rock from '../../public/assets/icons/rock.svg'
 import steel from '../../public/assets/icons/steel.svg'
 import water from '../../public/assets/icons/water.svg'
 import DetailsCard from './DetailsCard';
-
 
 
 type ColorMap = {
@@ -91,12 +90,11 @@ const typeIcons: ColorMap = {
 const UI: React.FC = () => {
 
   const [showFilters, setShowFilters] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [pokemonDetails, setPokemonDetails] = useState({id: 0, name: '', image: '', type: [''], colors: colors, typeIcons});
   const [data, setData] = useState<PokemonData[]>([]);
   const [resultsFound, setResultsFound] = useState<boolean>(true);
   const [filteredData, setFilteredData] = useState<PokemonData[]>([]);
-  const [detailsArray, setDetailsArray] = useState<any[]>([]);
   const [type, setType] = useState<string[]>([]);
   const [color, setColor] = useState<string[]>([]);
   const [filters, setFilters] = useState<string[]>([]);
@@ -165,7 +163,6 @@ const UI: React.FC = () => {
   const handleSearchButton = (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const search = searchRef.current?.value;
-    console.log(search);
     if (search) {
       const filteredData = data.filter(pokemon => pokemon.name.includes(search.toLowerCase()) || pokemon.type.includes(search.toLowerCase()) || Number(search) === pokemon.id);
       setFilteredData(filteredData);
@@ -215,7 +212,6 @@ const UI: React.FC = () => {
   }
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(event.target.value);
     if (event.target.value === "Lowest Number First") {
       const sortedData = [...filteredData].sort((a, b) => a.id - b.id);
       setFilteredData(sortedData);
@@ -272,35 +268,65 @@ const UI: React.FC = () => {
   
   return (
     <div>
-      {showFilters && <Filters sendDataToParent={handleDataFromCheckboxChild} sendCloseButtonData={handleCloseButtonData} type={type} color={color} />}
-      <div className="flex justify-between gap-10">
-        <Image src={PokedexLogo} alt="logo" width={200} height={200} className="self-start" />
-        <Image src={filter} alt="filter" width={40} height={40} className="hover:cursor-pointer" onClick={() => setShowFilters(filter => !filter)} />
-      </div>
-      <div className="flex items-center justify-center relative right-5 w-[88vw]">
-        <Image src={search} alt="search" className="size-5 relative top-4 left-7" />
-        <input type="search" onChange={handleSearchChange} ref={searchRef} placeholder="Search for a Pokemon" className={`w-[100%] ${fonts.RobotoMedium} text-[#416EDF] mt-8 px-9 py-3 rounded-xl shadow-md focus:outline-[#a8b9d6] focus:outline-4`} />
-        <button className={`bg-[#ffd030] p-2 rounded-md ${fonts.RobotoBold} text-[#416EDF] ml-4 absolute right-2 w-[10%] top-9 text-center`} onClick={handleSearchButton}> Search </button>
-      </div>
+      {showFilters && 
+        <section aria-labelledby="filters-section-title">
+          <h2 id="filters-section-title" className="sr-only">Filters</h2>
+          <Filters sendDataToParent={handleDataFromCheckboxChild} sendCloseButtonData={handleCloseButtonData} type={type} color={color} />
+        </section>
+      }
 
-      <select name="sort" id="sort" className='my-10 ml-4 px-4 py-2 rounded-md shadow-md' onChange={handleSelect}>
-        <option value="Lowest Number First" className={`${fonts.RobotoMedium}`}> Lowest Number First </option>
-        <option value="Highest Number First" className={`${fonts.RobotoMedium}`}>Highest Number First</option>
-        <option value="Alphabetically (A-Z)" className={`${fonts.RobotoMedium}`}>Alphabetically (A-Z)</option>
-        <option value="Alphabetically (Z-A)" className={`${fonts.RobotoMedium}`}>Alphabetically (Z-A)</option>
-      </select>
+      <header aria-labelledby="header-section-title">
+        <h1 id="header-section-title" className="sr-only">Pokedex Header</h1>
+        <div className="flex justify-between gap-10">
+          <Image src={PokedexLogo} alt="logo" width={200} height={200} className="self-start" />
+          <Image src={filter} alt="filter" width={40} height={40} className="hover:cursor-pointer" onClick={() => setShowFilters(filter => !filter)} />
+        </div>
+      </header>
+
+      <section aria-labelledby="search-section-title" className="flex items-center justify-center relative right-5 w-[88vw]">
+        <h2 id="search-section-title" className="sr-only">Search Pokémon</h2>
+        <Image src={search} alt="search" className="size-5 relative top-4 left-7" />
+        <input 
+          type="search" 
+          onChange={handleSearchChange} 
+          ref={searchRef} 
+          placeholder="Search for a Pokemon" 
+          className={`w-[100%] ${fonts.RobotoMedium} text-[#416EDF] mt-8 px-9 py-3 rounded-xl shadow-md focus:outline-[#a8b9d6] focus:outline-4`} 
+          aria-label="Search for a Pokemon" 
+        />
+        <button 
+          className={`bg-[#ffd030] p-2 rounded-md ${fonts.RobotoBold} text-[#416EDF] ml-4 absolute right-2 w-[10%] top-9 text-center`} 
+          onClick={handleSearchButton} 
+          aria-label="Search button">
+          Search
+        </button>
+      </section>
+
+      <section aria-labelledby="sort-section-title">
+        <h2 id="sort-section-title" className="sr-only">Sort Options</h2>
+        <select name="sort" id="sort" className='my-10 ml-4 px-4 py-2 rounded-md shadow-md' onChange={handleSelect} aria-label="Sort Pokémon">
+          <option value="Lowest Number First" className={`${fonts.RobotoMedium}`}> Lowest Number First </option>
+          <option value="Highest Number First" className={`${fonts.RobotoMedium}`}>Highest Number First</option>
+          <option value="Alphabetically (A-Z)" className={`${fonts.RobotoMedium}`}>Alphabetically (A-Z)</option>
+          <option value="Alphabetically (Z-A)" className={`${fonts.RobotoMedium}`}>Alphabetically (Z-A)</option>
+        </select>
+      </section>
 
       {isModalOpen && 
-        <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} style={customStyles}>
-          <DetailsCard pokemon={pokemonDetails} />
-        </Modal>
+        <section aria-labelledby="pokemon-details-section-title">
+          <h2 id="pokemon-details-section-title" className="sr-only">Pokemon Details</h2>
+          <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} style={customStyles}>
+            <DetailsCard pokemon={pokemonDetails} />
+          </Modal>
+        </section>
       }      
 
-      <div className="flex flex-wrap justify-center gap-10 mt-16">
+      <section aria-labelledby="pokemon-list-section-title" className="flex flex-wrap justify-center gap-10 mt-16">
+        <h2 id="pokemon-list-section-title" className="sr-only">Pokemon List</h2>
         {filteredData.map((pokemon, i) => (
-          <div key={pokemon.id} className={`hover:cursor-pointer mt-7 w-[19vw] px-12 py-4 rounded-md shadow-md`} style={{ backgroundColor: `rgba(${colors[pokemon.type[0]].split(' ')}, 0.8)`}} onClick={() => showDetailsCard(pokemon.id, pokemon.name, pokemon.image, pokemon.type)}>
+          <article key={pokemon.id} className={`hover:cursor-pointer mt-7 w-[19vw] px-12 py-4 rounded-md shadow-md`} style={{ backgroundColor: `rgba(${colors[pokemon.type[0]].split(' ')}, 0.8)`}} onClick={() => showDetailsCard(pokemon.id, pokemon.name, pokemon.image, pokemon.type)}>
             <img src={pokemon.image} alt={pokemon.name} className="relative -top-20 w-28 h-28 mx-auto"/>
-            <h1 className={`text-2xl font-bold text-[#f0ffef] text-center ${fonts.RobotoBold}`}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.substring(1)}</h1>
+            <h3 className={`text-2xl font-bold text-[#f0ffef] text-center ${fonts.RobotoBold}`}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.substring(1)}</h3>
             <p className={`text-lg text-[#f0ffef] text-center ${fonts.RobotoMedium}`}>#{pokemon.paddedId}</p>
             <div key={i} className="flex justify-start gap-6 mt-4">
               {pokemon.type.map((type, i) =>
@@ -310,11 +336,14 @@ const UI: React.FC = () => {
                 </div>
               )}
             </div>    
-          </div>
+          </article>
         ))}
-      </div>
+      </section>
 
-      <Pagination sendDataToParent={handleDataFromPaginationChild} activeNumber={pageNumber}/>
+      <footer aria-labelledby="pagination-section-title">
+        <h2 id="pagination-section-title" className="sr-only">Pagination</h2>
+        <Pagination sendDataToParent={handleDataFromPaginationChild} activeNumber={pageNumber} />
+      </footer>
     </div>
 
   );

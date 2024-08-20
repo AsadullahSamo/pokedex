@@ -1,0 +1,25 @@
+.sideBarAnimation {
+  animation: sideBarAnimation 1s ease-in-out;
+}
+
+@keyframes sideBarAnimation {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 0px;
+  }
+}
+
+.reverseSideBarAnimation {
+  animation: reverseSideBarAnimation 1s ease-in-out;
+}
+
+@keyframes reverseSideBarAnimation {
+  from {
+    right: 0px;
+  }
+  to {
+    right: -100%;
+  }
+}
