@@ -7,6 +7,7 @@ import search from '../../public/assets/icons/search.svg'
 import NoResults from '../../public/assets/images/no results.gif'
 import fonts from '../../styles/fonts.module.css';
 import PokedexLogo from '../../public/assets/icons/Pokedex-logo.svg';
+import filter from '../../public/assets/icons/filter.svg';
 import Modal from 'react-modal'
 Modal.setAppElement('#__next');
 
@@ -89,7 +90,7 @@ const typeIcons: ColorMap = {
 
 const UI: React.FC = () => {
 
-  // const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [pokemonDetails, setPokemonDetails] = useState({id: 0, name: '', image: '', type: [''], colors: colors, typeIcons});
   const [data, setData] = useState<PokemonData[]>([]);
@@ -148,13 +149,9 @@ const UI: React.FC = () => {
   }, [data]);
 
   useEffect(() => {
-    // console.log('Filters: ', filters);
     if (filters.length > 0) {
       const filtered = data.filter(pokemon => filters.some(filter => pokemon.type.includes(filter.toLowerCase())));
-      // console.log('Filtered:', filtered);
-      // console.log(filteredData)
       setFilteredData(filtered);
-      // setResultsFound(filtered.length > 0);
     } else {
       if(searchVal === '') {
         setFilteredData(data);
@@ -162,7 +159,6 @@ const UI: React.FC = () => {
         const filteredData = data.filter(pokemon => pokemon.name.includes(searchVal.toLowerCase()) || pokemon.type.includes(searchVal.toLowerCase()) || Number(searchVal) === pokemon.id);
         setFilteredData(filteredData);
       }
-      // setResultsFound(true);
     }
   }, [filters, data]);
 
@@ -172,8 +168,6 @@ const UI: React.FC = () => {
     console.log(search);
     if (search) {
       const filteredData = data.filter(pokemon => pokemon.name.includes(search.toLowerCase()) || pokemon.type.includes(search.toLowerCase()) || Number(search) === pokemon.id);
-      // console.log(Number(search))
-      // console.log(data[Number(search)])
       setFilteredData(filteredData);
       setResultsFound(filteredData.length > 0);
     } else {
@@ -186,7 +180,6 @@ const UI: React.FC = () => {
     event.preventDefault();
     const search = event.target.value;
     setSearchVal(search);
-    // console.log(search);
     if (search) {
       const filteredData = data.filter(pokemon => pokemon.name.includes(search.toLowerCase()) || pokemon.type.some(type => type.includes(search)) || Number(search) === pokemon.id);
       setFilteredData(filteredData);
@@ -202,15 +195,23 @@ const UI: React.FC = () => {
   }
 
   const handleDataFromCheckboxChild = (type: string, checked: boolean) => {
-    // console.log(type);
-    // console.log(checked);
+    if(type === 'All') {
+      setFilters([])
+      return;
+    } else if(type === 'Reset') {
+      setFilteredData([])
+      return;
+    }
+
     if (checked) {
       setFilters([...filters, type.toLowerCase()]);
-      // setFilteredData(filteredData.filter(pokemon => filters.some(filter => pokemon.type.includes(filter))));
-      // console.log(filters);
     } else {
       setFilters(filters.filter(filter => filter !== type.toLowerCase()));
     }
+  }
+
+  const handleCloseButtonData = (filter: boolean) => {
+    setShowFilters(filter => !filter);
   }
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -253,36 +254,10 @@ const UI: React.FC = () => {
   }
 
   const showDetailsCard = async (id: number, name: string, image: string, type: string[]) => {
-    // openModal();
     setIsModalOpen(true);
     setPokemonDetails({id, name, image, type, colors, typeIcons});
-  
-    // try {
-    //   const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${name}`);
-    //   const data = await response.json();
-      
-    //   const evolutionChainResponse = await fetch(data.evolution_chain.url);
-    //   const evolutionChainData = await evolutionChainResponse.json();
-      
-    //   const evoArray = getEvo([evolutionChainData.chain]);
-    //   setDetailsArray(evoArray);
-    //   console.log(evoArray); // This will now show the evolution chain correctly
-    // } catch (error) {
-    //   console.error('Error fetching Pokémon details:', error);
-    // }
   };
     
-  // function getEvo(arr: any[]) {
-  //   let evoChain: string[] = [];
-  //   if (arr[0].evolves_to.length > 0) {
-  //     evoChain.push(arr[0].species.name);
-  //     evoChain = evoChain.concat(getEvo(arr[0].evolves_to));
-  //   } else {
-  //     evoChain.push(arr[0].species.name);
-  //   }
-  //   return evoChain;
-  // }
-
   const customStyles = {
     content: {
       top: '50%',
@@ -297,12 +272,11 @@ const UI: React.FC = () => {
   
   return (
     <div>
-
-      
-
-      {/* <Filters sendDataToParent={handleDataFromCheckboxChild}/> */}
-      <Image src={PokedexLogo} alt="logo" width={200} height={200} className="self-start" />
-      {/* <SearchBar /> */}
+      {showFilters && <Filters sendDataToParent={handleDataFromCheckboxChild} sendCloseButtonData={handleCloseButtonData} type={type} color={color} />}
+      <div className="flex justify-between gap-10">
+        <Image src={PokedexLogo} alt="logo" width={200} height={200} className="self-start" />
+        <Image src={filter} alt="filter" width={40} height={40} className="hover:cursor-pointer" onClick={() => setShowFilters(filter => !filter)} />
+      </div>
       <div className="flex items-center justify-center relative right-5 w-[88vw]">
         <Image src={search} alt="search" className="size-5 relative top-4 left-7" />
         <input type="search" onChange={handleSearchChange} ref={searchRef} placeholder="Search for a Pokemon" className={`w-[100%] ${fonts.RobotoMedium} text-[#416EDF] mt-8 px-9 py-3 rounded-xl shadow-md focus:outline-[#a8b9d6] focus:outline-4`} />
@@ -316,35 +290,11 @@ const UI: React.FC = () => {
         <option value="Alphabetically (Z-A)" className={`${fonts.RobotoMedium}`}>Alphabetically (Z-A)</option>
       </select>
 
-      {/* <Modal
-        isOpen={isOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-      >
-        <button onClick={closeModal}>close</button>
-        <DetailsCard name={pokemonName} />
-        <div>I am a modal</div>
-        <form>
-          <input />
-          <button>tab navigation</button>
-          <button>stays</button>
-          <button>inside</button>
-          <button>the modal</button>
-        </form>
-      </Modal> */}
-
       {isModalOpen && 
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={() => setIsModalOpen(false)}
-          style={customStyles}
-        >
-          {/* <button onClick={() => setIsModalOpen(false)}>Close</button> */}
+        <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} style={customStyles}>
           <DetailsCard pokemon={pokemonDetails} />
         </Modal>
-      }
-
-      
+      }      
 
       <div className="flex flex-wrap justify-center gap-10 mt-16">
         {filteredData.map((pokemon, i) => (
