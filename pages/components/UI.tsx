@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Pagination } from './Pagination'
+import Pagination from './Pagination'
 import Filters from './Filters';
 import search from '../../public/assets/icons/search.svg'
 import NoResults from '../../public/assets/images/no results.gif'
@@ -111,7 +111,7 @@ const UI: React.FC = () => {
       .then(res => res.json())
       .then(data => {
         const pokemonPromises = data.results.map((pokemon: { name: string; url: string }) =>
-          fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+          fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon?.name}`)
           .then(res => res.json())
         );
         
@@ -121,7 +121,7 @@ const UI: React.FC = () => {
               id: index + 1,
               name: detail.name,
               paddedId: detail.id.toString().padStart(3, '0'),
-              image: `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${(detail.id).toString().padStart(3, '0')}.png`,
+              image: `https://assets.pokemon?.com/assets/cms2/img/pokedex/detail/${(detail.id).toString().padStart(3, '0')}.png`,
               type: detail.types.map((type: { type: { name: string } }) => type.type.name)
             }));
             setData(updatedData);
@@ -141,20 +141,20 @@ const UI: React.FC = () => {
 
   useEffect(() => {
     if (data.length > 0) {
-      setType(data.map(pokemon => pokemon.type.join(' / ')));
-      setColor(data.map(pokemon => colors[pokemon.type[0]]));
+      setType(data.map(pokemon => pokemon?.type.join(' / ')));
+      setColor(data.map(pokemon => colors[pokemon?.type[0]]));
     }
   }, [data]);
 
   useEffect(() => {
     if (filters.length > 0) {
-      const filtered = data.filter(pokemon => filters.some(filter => pokemon.type.includes(filter.toLowerCase())));
+      const filtered = data.filter(pokemon => filters.some(filter => pokemon?.type.includes(filter.toLowerCase())));
       setFilteredData(filtered);
     } else {
       if(searchVal === '') {
         setFilteredData(data);
       } else {
-        const filteredData = data.filter(pokemon => pokemon.name.includes(searchVal.toLowerCase()) || pokemon.type.includes(searchVal.toLowerCase()) || Number(searchVal) === pokemon.id);
+        const filteredData = data.filter(pokemon => pokemon?.name.includes(searchVal.toLowerCase()) || pokemon?.type.includes(searchVal.toLowerCase()) || Number(searchVal) === pokemon?.id);
         setFilteredData(filteredData);
       }
     }
@@ -164,7 +164,7 @@ const UI: React.FC = () => {
     event.preventDefault();
     const search = searchRef.current?.value;
     if (search) {
-      const filteredData = data.filter(pokemon => pokemon.name.includes(search.toLowerCase()) || pokemon.type.includes(search.toLowerCase()) || Number(search) === pokemon.id);
+      const filteredData = data.filter(pokemon => pokemon?.name.includes(search.toLowerCase()) || pokemon?.type.includes(search.toLowerCase()) || Number(search) === pokemon?.id);
       setFilteredData(filteredData);
       setResultsFound(filteredData.length > 0);
     } else {
@@ -178,7 +178,7 @@ const UI: React.FC = () => {
     const search = event.target.value;
     setSearchVal(search);
     if (search) {
-      const filteredData = data.filter(pokemon => pokemon.name.includes(search.toLowerCase()) || pokemon.type.some(type => type.includes(search)) || Number(search) === pokemon.id);
+      const filteredData = data.filter(pokemon => pokemon?.name.includes(search.toLowerCase()) || pokemon?.type.some(type => type.includes(search)) || Number(search) === pokemon?.id);
       setFilteredData(filteredData);
       setResultsFound(filteredData.length > 0);
     } else {
@@ -324,12 +324,12 @@ const UI: React.FC = () => {
       <section aria-labelledby="pokemon-list-section-title" className="flex flex-col items-center md:flex-row flex-wrap justify-center gap-10 mt-16">
         <h2 id="pokemon-list-section-title" className="sr-only">Pokemon List</h2>
         {filteredData.map((pokemon, i) => (
-          <article key={pokemon.id} className={`hover:cursor-pointer mt-7 sm:w-[45%] md:w-[40%] lg:w-[30%] xl:w-[22%] px-12 py-4 rounded-md shadow-md`} style={{ backgroundColor: `rgba(${colors[pokemon.type[0]].split(' ')}, 0.8)`}} onClick={() => showDetailsCard(pokemon.id, pokemon.name, pokemon.image, pokemon.type)}>
-            <img src={pokemon.image} alt={pokemon.name} className="relative -top-20 w-28 h-28 mx-auto"/>
-            <h3 className={`text-2xl font-bold text-[#f0ffef] text-center ${fonts.RobotoBold}`}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.substring(1)}</h3>
-            <p className={`text-lg text-[#f0ffef] text-center ${fonts.RobotoMedium}`}>#{pokemon.paddedId}</p>
+          <article key={pokemon?.id} className={`hover:cursor-pointer mt-7 sm:w-[45%] md:w-[40%] lg:w-[30%] xl:w-[22%] px-12 py-4 rounded-md shadow-md`} style={{ backgroundColor: `rgba(${colors[pokemon?.type[0]].split(' ')}, 0.8)`}} onClick={() => showDetailsCard(pokemon?.id, pokemon?.name, pokemon?.image, pokemon?.type)}>
+            <img src={pokemon?.image} alt={pokemon?.name} className="relative -top-20 w-28 h-28 mx-auto"/>
+            <h3 className={`text-2xl font-bold text-[#f0ffef] text-center ${fonts.RobotoBold}`}>{pokemon?.name.charAt(0).toUpperCase() + pokemon?.name.substring(1)}</h3>
+            <p className={`text-lg text-[#f0ffef] text-center ${fonts.RobotoMedium}`}>#{pokemon?.paddedId}</p>
             <div key={i} className="flex justify-start gap-6 mt-4">
-              {pokemon.type.map((type, i) =>
+              {pokemon?.type.map((type, i) =>
                 <div key={i} className="flex justify-center px-4 py-1 gap-2 mt-4 rounded-full mx-auto" style={{backgroundColor: `rgba(${colors[type].split(' ')}, 1)`}}>
                   <Image src={typeIcons[type]} width={20} height={20} alt={type}/>
                   <p className={`text-md ${fonts.RobotoRegular} relative -left-1`}> {type.charAt(0).toUpperCase() + type.substring(1)} </p>

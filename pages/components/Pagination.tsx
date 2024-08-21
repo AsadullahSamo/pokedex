@@ -7,7 +7,7 @@ interface PaginationProps {
   activeNumber: number;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({ sendDataToParent, activeNumber }) => {
+const Pagination: React.FC<PaginationProps> = ({ sendDataToParent, activeNumber }) => {
 
   const [active, setActive] = React.useState(activeNumber);
   const [startingNumberArray, setStartingNumberArray] = React.useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -51,3 +51,5 @@ export const Pagination: React.FC<PaginationProps> = ({ sendDataToParent, active
     </div>
   );
 }
+
+export default Pagination;

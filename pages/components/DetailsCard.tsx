@@ -12,7 +12,7 @@ export default function DetailsCard({pokemon}: any) {
 	const [stats, setStats] = useState<number[]>([]);
     
 	useEffect(() => {
-		fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.name}`)
+		fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon?.name}`)
 		.then(response => response.json())
 		.then(data => {
 		    fetch(data?.evolution_chain?.url)
@@ -26,7 +26,7 @@ export default function DetailsCard({pokemon}: any) {
 	}, [])
 	
 	useEffect(() => {
-		fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+		fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon?.name}`)
 		.then((response) => response.json())
 		.then((data) => { 
 			let abilities: string = '';
@@ -73,16 +73,16 @@ export default function DetailsCard({pokemon}: any) {
 	<>
 		<section aria-labelledby="pokemon-section">
 			<h2 id="pokemon-section" className="sr-only">Pokemon Details Section</h2>
-			<div className="flex flex-wrap justify-center gap-2 w-[600px] py-12 rounded-text-[18px]" style={{ backgroundColor: `rgba(${pokemon.colors[pokemon.type[0]]?.split(' ')}, 0.8)`}}>
-				<img src={pokemon.image} alt={pokemon.name} className="w-40 h-40" />
+			<div className="flex flex-wrap justify-center gap-2 w-[600px] py-12 rounded-text-[18px]" style={{ backgroundColor: `rgba(${pokemon?.colors[pokemon?.type[0]]?.split(' ')}, 0.8)`}}>
+				<img src={pokemon?.image} alt={pokemon?.name} className="w-40 h-40" />
 				
 				<div className="flex flex-col mt-9">
-					<p className={`text-lg text-[#f0ffef] text-center ${fonts.RobotoMedium}`}>#{pokemon.id.toString().padStart(3, '0')}</p>
-					<h1 className={`text-2xl font-bold text-[#f0ffef] text-center ${fonts.RobotoBold}`}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.substring(1)}</h1>
-					<div key={pokemon.id} className="flex justify-start gap-6">
-						{pokemon.type.map((type: string, i: number) =>
-							<div key={i} className="flex justify-center px-4 py-1 gap-2 mt-1 rounded-full mx-auto" style={{backgroundColor: `rgba(${pokemon.colors[type]?.split(' ')}, 1)`}}>
-								<Image src={pokemon.typeIcons[type]} width={20} height={20} alt={type}/>
+					<p className={`text-lg text-[#f0ffef] text-center ${fonts.RobotoMedium}`}>#{pokemon?.id.toString().padStart(3, '0')}</p>
+					<h1 className={`text-2xl font-bold text-[#f0ffef] text-center ${fonts.RobotoBold}`}>{pokemon?.name.charAt(0).toUpperCase() + pokemon?.name.substring(1)}</h1>
+					<div key={pokemon?.id} className="flex justify-start gap-6">
+						{pokemon?.type.map((type: string, i: number) =>
+							<div key={i} className="flex justify-center px-4 py-1 gap-2 mt-1 rounded-full mx-auto" style={{backgroundColor: `rgba(${pokemon?.colors[type]?.split(' ')}, 1)`}}>
+								<Image src={pokemon?.typeIcons[type]} width={20} height={20} alt={type}/>
 								<p className={`text-md ${fonts.RobotoRegular} relative -left-1`}> {type.charAt(0).toUpperCase() + type.substring(1)} </p>
 							</div>
 						)}
@@ -129,7 +129,7 @@ export default function DetailsCard({pokemon}: any) {
 						<div className='flex flex-col gap-16 justify-start'>
 							{evolutionArray.evolution.map((evo, index) => (
 								evolutionArray.evolution.length - 1 !== index && (
-									<div className='flex gap-10 justify-between mx-16 mt-10'>
+									<div className='flex gap-10 justify-between mx-16 mt-10' key={index}>
 										<img src={`https://img.pokemondb.net/artwork/${evo}.jpg`} alt={evo} className='w-24 h-24'/>
 										<div className='flex flex-col -mt-5'>
 											<p className='text-[90px] font-bold text-[#a2a2a2] -mt-5'> &rarr; </p>
@@ -151,7 +151,7 @@ export default function DetailsCard({pokemon}: any) {
 								<div key={i} className='flex gap-10 justify-start'>
 									<p className='font-bold text-[#a2a2a2] -mt-5 ml-6'> {stat[0]} </p>
 									<p className={`${fonts.RobotoMedium} text-black -mt-5 self-center`} style={{marginLeft: `${stat[1]}px`}}> {stats[i]} </p>
-									<ProgressBar width={stats[i]} color={pokemon.colors[pokemon.type[0]]?.split(' ')} />
+									<ProgressBar width={stats[i]} color={pokemon?.colors[pokemon?.type[0]]?.split(' ')} />
 								</div>
 							))}
 						</div>
