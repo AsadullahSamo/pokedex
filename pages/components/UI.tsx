@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Head from 'next/head';
 import Image from 'next/image';
 import Pagination from './Pagination'
 import Filters from './Filters';
@@ -268,6 +269,13 @@ const UI: React.FC = () => {
   
   return (
     <div>
+
+      <Head>
+        <title>Pokedex</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="author" content="Asadullah Samoon" />
+      </Head>
+
       {showFilters && 
         <section aria-labelledby="filters-section-title">
           <h2 id="filters-section-title" className="sr-only">Filters</h2>

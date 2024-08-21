@@ -1,7 +1,7 @@
 import React from "react";
-import {IconButton } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
- 
+import Head from "next/head"; 
+
 interface PaginationProps {
   sendDataToParent: (pageNumber: number) => void;
   activeNumber: number;
@@ -31,7 +31,12 @@ const Pagination: React.FC<PaginationProps> = ({ sendDataToParent, activeNumber 
  
   return (
     <div className="flex items-center justify-center gap-4 mt-10">
-      
+      <Head>
+        <title>Pokedex</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="author" content="Asadullah Samoon" />
+      </Head>
+
       <button className={`flex items-center gap-2 rounded-full px-3 py-2 duration-500 ${active > 1 ? 'hover:bg-gray-400 hover:text-white' : ''}`} onClick={prev} disabled={active === 1}>
         <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" /> 
         Previous

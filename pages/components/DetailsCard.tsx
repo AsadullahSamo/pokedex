@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ProgressBar from './ProgressBar';
 import Image from 'next/image';
 import fonts from '../../styles/fonts.module.css';
+import Head from 'next/head';
 
 export default function DetailsCard({pokemon}: any) {
 
@@ -71,6 +72,12 @@ export default function DetailsCard({pokemon}: any) {
   return (
 		
 	<>
+		<Head>
+			<title>Pokedex</title>
+			<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			<meta name="author" content="Asadullah Samoon" />
+		</Head>
+
 		<section aria-labelledby="pokemon-section">
 			<h2 id="pokemon-section" className="sr-only">Pokemon Details Section</h2>
 			<div className="flex flex-wrap justify-center gap-2 w-[600px] py-12 rounded-text-[18px]" style={{ backgroundColor: `rgba(${pokemon?.colors[pokemon?.type[0]]?.split(' ')}, 0.8)`}}>
