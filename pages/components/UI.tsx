@@ -121,7 +121,7 @@ const UI: React.FC = () => {
               id: index + 1,
               name: detail.name,
               paddedId: detail.id.toString().padStart(3, '0'),
-              image: `https://assets.pokemon?.com/assets/cms2/img/pokedex/detail/${(detail.id).toString().padStart(3, '0')}.png`,
+              image: `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${(detail.id).toString().padStart(3, '0')}.png`,
               type: detail.types.map((type: { type: { name: string } }) => type.type.name)
             }));
             setData(updatedData);
