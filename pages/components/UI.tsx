@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { lazy, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Pagination from './Pagination'
@@ -274,6 +274,9 @@ const UI: React.FC = () => {
         <title>Pokedex</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="author" content="Asadullah Samoon" />
+         <meta name="description" content="Explore detailed information about Pokémon in the Pokedex. Search, filter, and discover your favorite Pokémon with ease." />
+        <link rel="dns-prefetch" href="//pokeapi.co" />
+        <link rel="preconnect" href="https://pokeapi.co" crossOrigin="anonymous" />
       </Head>
 
       {showFilters && 
@@ -286,7 +289,7 @@ const UI: React.FC = () => {
       <header aria-labelledby="header-section-title">
         <h1 id="header-section-title" className="sr-only">Pokedex Header</h1>
         <div className="flex justify-between gap-10">
-          <Image src={PokedexLogo} alt="logo" width={200} height={200} className="ml-16 md:ml-0 md:self-start" />
+          <Image src={PokedexLogo} layout='intrinsic' loading='lazy' priority={false} alt="logo" width={200} height={200} className="ml-16 md:ml-0 md:self-start" />
           <Image src={filter} alt="filter" width={40} height={40} className="mr-16 md:mr-0 hover:cursor-pointer" onClick={() => setShowFilters(filter => !filter)} />
         </div>
       </header>
@@ -339,7 +342,7 @@ const UI: React.FC = () => {
             <div key={i} className="flex justify-start gap-6 mt-4">
               {pokemon?.type.map((type, i) =>
                 <div key={i} className="flex justify-center px-4 py-1 gap-2 mt-4 rounded-full mx-auto" style={{backgroundColor: `rgba(${colors[type].split(' ')}, 1)`}}>
-                  <Image src={typeIcons[type]} width={20} height={20} alt={type}/>
+                  <Image src={typeIcons[type]} quality={75} layout='intrinsic' width={20} height={20} alt={type}/>
                   <p className={`text-md ${fonts.RobotoRegular} relative -left-1`}> {type.charAt(0).toUpperCase() + type.substring(1)} </p>
                 </div>
               )}
